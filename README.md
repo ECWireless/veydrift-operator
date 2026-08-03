@@ -40,4 +40,12 @@ bun run start
 
 Real credentials belong only in the ignored `.env`. Keep tracked examples synthetic and never commit private keys, bot tokens, RPC credentials, or chat identifiers.
 
-Dependency installation and verification commands disable Bun's automatic `.env` loading. Runtime commands will intentionally load validated local configuration in later phases.
+Dependency installation and verification commands disable Bun's automatic `.env` loading. Runtime commands intentionally load validated local configuration.
+
+## Local operator identity
+
+Copy `.env.example` to the ignored `.env` and replace the intentionally invalid private-key placeholder locally. The operator requires a `0x`-prefixed, 32-byte secp256k1 private key in `VEYDRIFT_OPERATOR_PRIVATE_KEY`.
+
+At startup, the operator validates that value and reports only its derived, checksummed public wallet address. The private key is not returned from the identity boundary or included in configuration errors.
+
+The public operator address establishes the canonical player-wallet identity, but it is not proof of dashboard access. A future remotely accessible dashboard must authenticate a human through a fresh signed challenge or a separate controller identity. The operator private key must never be sent to a browser or used by the server to authenticate itself as the user.
