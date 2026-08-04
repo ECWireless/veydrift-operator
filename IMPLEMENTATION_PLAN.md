@@ -215,12 +215,36 @@ Telegram is the first adapter. Other platforms should require a new adapter and 
 
 ### Phase 0: Scaffold And Deployment Discovery
 
-- [ ] Create the Bun workspace, configuration validation, tests, and local run commands.
+- [x] Create the Bun workspace, configuration validation, tests, and local run commands.
 - [ ] Pin the live chain, contracts, ABI hash, deployment commit, backend build, and API surfaces in a deployment manifest.
 - [ ] Fail closed at startup when the live deployment is incompatible with a supported manifest.
-- [ ] Add safe wallet-address derivation without exposing the private key.
+- [x] Add safe wallet-address derivation without exposing the private key.
 - [ ] Add fixture-based game-state tests.
 - [ ] Pass the Phase 0 exit gate, then explicitly approve wallet funding and first-planet settlement before Phase 1 begins.
+
+#### Phase 0 Unit Ledger
+
+This ledger shows the working PR-sized decomposition for the current phase. Planned entries are directional rather than implementation approval: refine each entry during its debrief, obtain explicit approval, keep its status current, and record the merged result and verification evidence before beginning the next unit.
+
+1. **Workspace foundation — merged 2026-08-03** (`#1`, `1d08e32`)
+   - Established the Bun 1.3.14 and TypeScript workspace, operator entry point, local run commands, and formatting, lint, type-check, test, and build baseline.
+   - Verified the frozen dependency install, complete local check, independent review, and manual startup flow.
+2. **Local operator identity — merged 2026-08-03** (`#2`, `6a43b82`)
+   - Added the synthetic environment template, fail-closed private-key validation, and server-side derivation of an immutable, checksummed public wallet address with sanitized configuration failures.
+   - Kept signing, RPC, transaction execution, and dashboard authentication outside the unit; documented that a remotely accessible dashboard needs its own human-authentication boundary.
+   - Verified the frozen dependency install, complete local check, boundary and secp256k1 edge-case tests, two independent reviews, and manual startup with the ignored local configuration.
+3. **Supported deployment manifest — planned**
+   - Add a versioned, typed manifest that pins the supported Base chain, game contract, ABI hash, deployment commit, backend build, and authoritative runtime/API surfaces with provenance.
+   - Verify manifest validation and invariants with deterministic fixtures; exclude live compatibility enforcement, signing, and transactions.
+4. **Runtime deployment compatibility gate — planned**
+   - Resolve the live deployment identity through bounded read-only adapters, compare it with the supported manifest, and refuse normal startup on an incompatible or unverifiable target.
+   - Cover supported, mismatched, malformed, and unavailable-source paths with deterministic fixtures and sanitized failures; exclude all wallet signing and transaction construction.
+5. **Game-state fixture test harness — planned**
+   - Add reusable fixture conventions and a minimal canonical player-state case covering a wallet, one planet, its resources, and score so Phase 0 can prove deterministic offline game-state tests.
+   - Verify fixture loading and representative valid and malformed inputs; defer the full normalized domain model, queues, research, fleets, missions, defenses, Rift locks, universe state, live collection, and persistence to Phase 1.
+6. **Phase 0 exit gate — planned**
+   - Run and record the complete Phase 0 verification baseline, review deployment and secret boundaries, exercise approved read-only startup paths, and publish a clear go/no-go checklist with remaining assumptions.
+   - Keep wallet funding and first-planet settlement outside this unit; each remains blocked until the gate passes and receives separate explicit approval.
 
 ### Phase 1: Read-Only Operator
 
