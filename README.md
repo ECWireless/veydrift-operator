@@ -4,6 +4,8 @@ Veydrift Operator is an open-source, self-hosted assistant for observing Veydrif
 
 The project is currently in Phase 0: scaffold and deployment discovery. It must not fund the operator wallet or claim a first planet until the Phase 0 exit gate passes and those actions receive separate approval.
 
+Project direction lives in the [implementation plan](IMPLEMENTATION_PLAN.md). The [supported deployment manifest](docs/deployment-manifest.md) records the reviewed live identity and update process. The maintained [Veydrift whitepaper research note](docs/research/veydrift-whitepaper.md) records the game's economic design context and how it applies to the operator without overriding live contract behavior.
+
 ## Prerequisites
 
 - Bun 1.3.14
