@@ -1,10 +1,19 @@
 # Veydrift Operator
 
-Veydrift Operator is an open-source, self-hosted assistant for observing Veydrift, explaining strategic choices, and eventually executing explicitly bounded actions.
+Veydrift Operator is a small, open-source companion for understanding Veydrift. The MVP will periodically capture the current public game state, explain the universe and one configured player's place in it, and answer nonpersistent strategy questions through an OpenAI-backed chat interface.
 
-The project is currently in Phase 0: scaffold and deployment discovery. It must not fund the operator wallet or claim a first planet until the Phase 0 exit gate passes and those actions receive separate approval.
+The product is read-only and advisory. Transaction construction, signing, approvals, automation, alerts, Telegram, persistent chat, and multi-user hosting are outside the MVP.
 
-Project direction lives in the [implementation plan](IMPLEMENTATION_PLAN.md). The [supported deployment manifest](docs/deployment-manifest.md) records the reviewed live identity and update process. The maintained [Veydrift whitepaper research note](docs/research/veydrift-whitepaper.md) records the game's economic design context and how it applies to the operator without overriding live contract behavior.
+The project is currently in Phase 1: resetting the earlier automation-oriented roadmap around this smaller product. Direction and phase gates live in the [implementation plan](IMPLEMENTATION_PLAN.md). The [deployment manifest](docs/deployment-manifest.md) preserves reviewed live-deployment research, and the [whitepaper research note](docs/research/veydrift-whitepaper.md) preserves labeled economic and game-design context.
+
+## Planned MVP
+
+1. A Bun worker refreshes one normalized snapshot immediately at startup and on a configurable interval.
+2. A React dashboard presents the universe, the configured player, snapshot freshness, and a cached narrative.
+3. A server-side OpenAI boundary answers strategy questions using verified game context, deterministic derived facts, and the latest snapshot.
+4. The application keeps chat turns only in browser memory and clears them on reload; each request still transmits the needed turns to OpenAI.
+
+Historical snapshot retention is deliberately undecided. Phase 2 will measure real serialized and compressed snapshot sizes, project storage at useful intervals, and test whether history materially improves narrative and strategy answers before selecting any datastore.
 
 ## Prerequisites
 
@@ -34,20 +43,16 @@ bun --no-env-file run test
 bun --no-env-file run build
 ```
 
-Start the current operator scaffold:
+## Current scaffold note
+
+The code on `main` still contains the earlier local private-key identity scaffold. Until Phase 2 replaces it with a public player-address configuration, starting that scaffold follows the existing synthetic `.env.example` flow:
 
 ```sh
 bun run start
 ```
 
-Real credentials belong only in the ignored `.env`. Keep tracked examples synthetic and never commit private keys, bot tokens, RPC credentials, or chat identifiers.
+Do not fund that wallet or treat the legacy startup path as an MVP requirement. The read-only product will not require a private key.
 
-Dependency installation and verification commands disable Bun's automatic `.env` loading. Runtime commands intentionally load validated local configuration.
+Future OpenAI access will use a server-side `OPENAI_API_KEY` from the ignored `.env`. It must never be exposed to browser code, API responses, logs, tests, screenshots, or tracked examples. OpenAI calls are not part of Phase 1.
 
-## Local operator identity
-
-Copy `.env.example` to the ignored `.env` and replace the intentionally invalid private-key placeholder locally. The operator requires a `0x`-prefixed, 32-byte secp256k1 private key in `VEYDRIFT_OPERATOR_PRIVATE_KEY`.
-
-At startup, the operator validates that value and reports only its derived, checksummed public wallet address. The private key is not returned from the identity boundary or included in configuration errors.
-
-The public operator address establishes the canonical player-wallet identity, but it is not proof of dashboard access. A future remotely accessible dashboard must authenticate a human through a fresh signed challenge or a separate controller identity. The operator private key must never be sent to a browser or used by the server to authenticate itself as the user.
+The application will set `store: false` and will not maintain a server conversation store. That setting disables retrievable Responses application state; it does not promise Zero Data Retention or prevent all provider-side abuse-monitoring and prompt-cache retention. OpenAI's current [API data controls](https://developers.openai.com/api/docs/guides/your-data#data-retention-controls-for-abuse-monitoring) apply to transmitted chat content.

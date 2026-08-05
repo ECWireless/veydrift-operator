@@ -2,11 +2,17 @@
 
 ## Purpose
 
-The supported deployment manifest is the operator's reviewed trust anchor for a specific Veydrift deployment. It records immutable identity and provenance; it does not discover the live deployment, make network requests, authorize actions, or decide whether a mismatch is safe.
+The supported deployment manifest is a reviewed research record for a specific Veydrift deployment. It preserves immutable identity and provenance gathered during the earlier deployment-discovery work; it does not discover the live deployment, make network requests, authorize actions, or establish that every volatile backend rebuild is incompatible with the read-only analyst.
 
 The typed schema and parser live in `apps/operator/src/deployment-manifest.ts`. The currently supported identity lives in `apps/operator/src/supported-deployment.ts`. Parsing rejects unknown fields, normalizes valid EVM addresses to checksum form, enforces cross-field invariants, and deeply freezes the result.
 
-Runtime compatibility enforcement belongs to Phase 0 Unit 4. Until that gate exists, importing the manifest does not establish that the current live deployment still matches it.
+Importing the manifest does not establish that the current live deployment still matches it.
+
+## MVP Usage
+
+Phase 2 will perform proportionate read-only validation of the live Base chain ID, game address, public response schemas, and freshness before accepting a snapshot. The exact implementation, ABI, bytecode, and backend-build evidence in this manifest remains useful for diagnosing rule or data disagreements, but a backend build change alone is not an MVP startup blocker when the public schema and underlying game identity remain compatible.
+
+The manifest is not sent wholesale to OpenAI. Analysis receives only the verified rules, provenance, and compatibility caveats relevant to the current snapshot or question.
 
 ## Current Identity
 
@@ -14,16 +20,16 @@ The manifest was verified on 2026-08-04 against the block returned by Base RPC's
 
 | Surface | Pinned identity | Status |
 | --- | --- | --- |
-| Chain | Base mainnet, chain ID `8453` | Required core |
-| Game proxy | `0xf397910F005151b09644228573a4353818D3755d` | Required core |
-| Game implementation | `0xffC01680Ae10698eCF14aFFD63da195366d65873` from the EIP-1967 implementation slot | Required core |
-| Deployment artifact | commit `701bed3578cff4d134657c714c599dbdb55a4b6a`, ABI `sha256:62cdedb794d4aa11cce1e9ef61e26f12227ce40a3bf47dd6156db6dc5676bc99` | Required core |
-| Backend build | commit `30d904defb684f528cbefc55ac14f87b0cce3331`, source `VEYDRIFT_BUILD_ARTIFACT` | Pinned service evidence |
-| Resource tokens | vMETAL, vCRYSTAL, and vDEUT proxies and their EIP-1967 implementations, with code present and 6-decimal token calls verified | Supported optional capability |
-| Rift | No dedicated live selector and state-semantics verification in this unit | Disabled optional capability |
-| Market | No verified production market contract surface in the runtime | Disabled optional capability |
+| Chain | Base mainnet, chain ID `8453` | Verified core observation |
+| Game proxy | `0xf397910F005151b09644228573a4353818D3755d` | Verified core observation |
+| Game implementation | `0xffC01680Ae10698eCF14aFFD63da195366d65873` from the EIP-1967 implementation slot | Verified core observation |
+| Deployment artifact | commit `701bed3578cff4d134657c714c599dbdb55a4b6a`, ABI `sha256:62cdedb794d4aa11cce1e9ef61e26f12227ce40a3bf47dd6156db6dc5676bc99` | Verified core observation |
+| Backend build | commit `30d904defb684f528cbefc55ac14f87b0cce3331`, source `VEYDRIFT_BUILD_ARTIFACT` | Historical service evidence |
+| Resource tokens | vMETAL, vCRYSTAL, and vDEUT proxies and their EIP-1967 implementations, with code present and 6-decimal token calls verified | Verified optional observation |
+| Rift | No dedicated live selector and state-semantics verification in this unit | Unverified context |
+| Market | No verified production market contract surface in the runtime | Unverified context |
 
-Resource-token support does not activate trading, transfers, withdrawals, Rift extraction, or any other transaction path. It records only the independently observed contract identities and public token metadata. The whitepaper's internal-unit conversion remains research context and is deliberately not encoded as verified deployment behavior.
+Resource-token support does not activate trading, transfers, withdrawals, Rift extraction, or any other transaction path. The read-only MVP has no such action path. This table records only the independently observed contract identities and public token metadata. The whitepaper's internal-unit conversion remains research context and is deliberately not encoded as verified deployment behavior.
 
 ## Evidence And Hash Definitions
 
@@ -38,15 +44,15 @@ The manifest reconciles four source classes:
 
 Research provenance is separate from deployment identity. The upstream research commit and the maintained whitepaper note can guide later interpretation, but neither can override verified contract code or runtime identity.
 
-## Updating The Manifest
+## Updating The Research Record
 
-Treat any update as a deployment trust change:
+Update this record only when current analysis needs refreshed deployment provenance or a diagnosed disagreement requires it:
 
 1. Read the production runtime configuration and health metadata without sending a player wallet address.
 2. Pin one finalized Base block and verify the chain ID, game proxy code, EIP-1967 implementation address and code, and any optional contract identities using read-only RPC calls.
 3. Reconcile the deployment commit and ABI hash with the exact upstream deployment artifact. Record any inability to reproduce an artifact hash rather than weakening the check.
-4. Verify each optional capability independently. Leave it disabled when evidence is missing, stale, inconsistent, or only planned upstream.
+4. Verify each optional observation independently. Mark it unavailable when evidence is missing, stale, inconsistent, or only planned upstream.
 5. Update the immutable manifest, provenance document, and deterministic tests in one reviewed change.
 6. Run the frozen dependency install and complete repository check, then obtain the independent correctness and security reviews required for deployment trust changes.
 
-Do not update the manifest merely to silence a future compatibility failure. Investigate the deployment difference first, and never use this process to sign, submit, fund, claim, trade, or otherwise mutate game or wallet state.
+Do not update the manifest merely to erase an unexplained difference. Investigate and document the change first. This process is read-only and must never sign, submit, fund, claim, trade, or otherwise mutate game or wallet state.

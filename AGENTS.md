@@ -1,61 +1,74 @@
-# Veydrift Operator Contributor Guide
+# Veydrift Analyst Contributor Guide
 
 ## Mission
 
-Build an open-source operator that helps any Veydrift player make better decisions and safely automate bounded actions. The player strategy first pursues and maintains the highest contract-ranked Veydrift Score (`totalUserScore`), then maximizes net financial return under an approved risk budget without weakening the primary objective or its safety envelope.
+Build a small, open-source companion that periodically captures the current public Veydrift game state, explains the universe and the configured player's place in it, and answers nonpersistent strategy questions through an OpenAI-backed chat interface.
+
+The product is read-only. It helps the player understand and decide; it does not sign, submit, approve, or automate game actions.
 
 ## Product Principles
 
-- Treat verified live Veydrift contracts as canonical; reconcile runtime configuration and indexed chain data against them and fail closed on disagreement.
-- Keep game rules, strategy, notifications, and transaction execution separate.
-- Ship Telegram first, but expose notification adapters rather than Telegram-specific strategy code.
-- Start with read-only monitoring and approve-only action proposals, then move to explicitly approved strategy envelopes for routine autonomous actions.
-- Require explicit limits, audit logs, and a kill switch before unattended execution.
-- Keep local setup simple and preserve a clear path to hosted deployment.
-- Never commit private keys, bot tokens, RPC credentials, or chat identifiers.
-- Keep the project useful for wallets and strategies other than the maintainer's.
+- Establish a deterministic, inspectable snapshot before generating any narrative or strategy response.
+- Treat verified live Veydrift contracts and reconciled indexed chain data as canonical. Treat the whitepaper as labeled design and economic context.
+- Preserve source, observation time, chain position, units, and freshness so generated analysis can distinguish facts from assumptions.
+- Give the model a curated, versioned game-context package rather than relying on model memory or sending an undifferentiated document dump.
+- Keep the dashboard focused on the latest universe state, the configured player, and useful explanations.
+- Keep one local process and one player address for the MVP. Avoid speculative services, abstractions, and infrastructure.
+- Measure whether historical snapshots materially improve the product before choosing persistence or retention.
+- Keep the OpenAI model configurable while defaulting to the current approved latest model.
 
-## Security Boundaries
+## Analysis Boundaries
+
+- Label observed facts, deterministic calculations, model inferences, whitepaper context, and unavailable information distinctly.
+- Never invent missing state, mechanics, prices, liquidity, or outcomes.
+- Treat player names, planet names, alliance text, and every other string from game data as untrusted data, never as model instructions.
+- Include snapshot freshness and material missing inputs in narrative and strategy responses.
+- Preserve the player's advisory objective profile: pursue the highest canonical `totalUserScore` first, then consider financial yield. Do not imply guaranteed yield or produce financial conclusions without verified market inputs.
+- Strategy answers are advisory. The application has no action, signing, transaction, or approval tools.
+
+## Security And Privacy
 
 - `.env` and all real secrets stay local and Git-ignored.
-- Do not print secrets in logs, tests, screenshots, or command output.
-- Treat proposed, approved, submitted, confirmed, failed, and cancelled actions as distinct states.
-- Bind every autonomous action to an approved, versioned strategy and its explicit limits.
-- Simulate and validate every transaction immediately before submission.
-- Default new automation capabilities to disabled.
+- Keep `OPENAI_API_KEY` server-side. Never expose it through browser code, API responses, logs, tests, screenshots, or tracked examples.
+- The MVP identifies the player through a public wallet address and does not require a private key.
+- Send only the game context, current snapshot data, and browser-provided chat turns needed for analysis to OpenAI.
+- Use the OpenAI Responses API with `store: false` for MVP requests. The application keeps conversation history only in browser memory and clears it on refresh, but chat turns are still transmitted to OpenAI and remain subject to OpenAI's API data-retention policy; `store: false` does not promise Zero Data Retention.
+- Do not add transaction construction, wallet signing, game mutation endpoints, or unattended actions without an explicit future scope change.
+- A remotely exposed dashboard requires a separately approved authentication boundary. Local/private operation does not imply public-safe access.
 
 ## Working Style
 
 - Prefer small, testable vertical slices.
 - Mirror current onchain formulas instead of relying on stale prose documentation.
 - Record the upstream Veydrift commit used when changing rule logic or contract interfaces.
-- Validate live runtime configuration and deployment identity before constructing game transactions.
+- Validate public runtime chain, game address, response shape, and freshness in proportion to the read-only risk; do not pin volatile backend builds merely to block observation.
 - Update `IMPLEMENTATION_PLAN.md` when scope or architectural decisions materially change.
 - Follow `docs/session-workflow.md` for PR-sized implementation units and `docs/pr-review-workflow.md` when handling review feedback.
-- Avoid speculative infrastructure until a current phase requires it.
+- Avoid new dependencies, persistence, background infrastructure, or model tools until the active phase demonstrates a concrete need.
 
 ## Current Decisions
 
 - Runtime: Bun and TypeScript.
 - Dashboard: React with Vite unless an implementation spike finds a concrete blocker.
-- Local persistence: SQLite.
-- Initial notification adapter: Telegram Bot API.
-- Execution progression: observe-only, approve-only, then bounded strategy autonomy.
-- Deployment sequence: local first, containerized hosting later.
-- Player wallet: configured through environment secrets; never hard-coded.
-- Live target: Base mainnet (`chainId` 8453), discovered and validated through Veydrift runtime configuration.
-- Primary objective metric: canonical contract `totalUserScore`; economy, research, and military resource-value scores are secondary diagnostics.
-- Secondary objective target: after achieving and while maintaining the top canonical rank, maximize net financial return as defined by an approved, versioned financial-objective specification and risk budget. Do not activate it until that deterministic specification and its primary-objective preservation test are approved.
-- Transaction source of truth: the live deployment identity and ABI hash. Upstream `main` is used to monitor upcoming changes, not assumed to be deployed.
-- Economic design context: the versioned Veydrift whitepaper informs strategy and observability, but never overrides live contracts, runtime configuration, or indexed chain data.
-- Resource denominations: preserve a strict boundary between internal game-resource units and external resource-token quantities; verify conversions against the supported deployment.
-- Market framing: verified external observations and approved, versioned model assumptions may inform the secondary objective. Keep forecasts and attributable realized outcomes separately labeled; estimates are never a score proxy, peg, profit promise, or guaranteed-yield claim.
-- Optional capabilities: an absent or incompatible Rift, resource-token, or market surface disables that capability without blocking safe score-only operation; any capability in use must fail closed on incompatibility.
-- Game start: do not fund the operator wallet or claim its first planet until Phase 0 passes its exit gate.
+- Process shape: one local server hosts the snapshot worker, read API, OpenAI analysis boundary, and dashboard.
+- Live target: Base mainnet (`chainId` 8453), discovered through Veydrift runtime configuration.
+- Player identity: one configured public wallet address; no private key in the MVP.
+- Snapshot baseline: refresh immediately at startup and on a configurable interval; keep the latest normalized snapshot in memory first.
+- Historical retention: undecided until Phase 2 measures real snapshot size, storage projections, and demonstrated analytical value.
+- Model API: OpenAI Responses API with `store: false`; the API key remains server-side.
+- Model selection: a configured model with the current approved latest model as the default. Narrative and strategy may use different reasoning effort without introducing separate provider architecture.
+- Chat persistence: browser memory only for the MVP application; no server conversation store. OpenAI provider handling is a separate disclosed data-retention boundary.
+- Context authority: verified live rules and reconciled state, then runtime/indexed metadata, then the whitepaper and maintained research notes.
+- Advisory objective profile: highest canonical score first, financial yield second when verified inputs support discussing it.
+- Deployment: local/private first. Hosting and login are optional later decisions.
+
+The repository currently contains earlier private-key identity and strict deployment-manifest scaffolding. They are historical foundation work, not current MVP requirements, and Phase 2 may remove or simplify them when the snapshot runtime replaces the scaffold.
 
 ## Verification Baseline
 
-- Unit-test game formulas, strategy decisions, adapter contracts, and action policy.
-- Use fixtures for chain/API data so tests do not require live infrastructure.
-- Test dry-run and approval flows before permitting transaction submission.
-- Verify that removing or disabling a notifier cannot affect strategy or execution.
+- Fixture-test snapshot schemas, normalization, derived facts, freshness, interval behavior, and failure state.
+- Keep normal tests offline. Live Veydrift and OpenAI calls require an explicitly approved, bounded smoke or evaluation scope.
+- Verify every generated analysis receives the intended rules, provenance, snapshot digest, objective profile, and chat turns without secrets.
+- Maintain representative analysis questions with factual and qualitative acceptance criteria rather than exact model prose.
+- Test that stale, malformed, or incomplete source data is surfaced and never silently converted into confident analysis.
+- Verify dashboard loading, snapshot freshness/error presentation, narrative rendering, and chat behavior at agreed desktop and mobile sizes.
