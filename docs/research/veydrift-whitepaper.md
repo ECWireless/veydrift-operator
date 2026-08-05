@@ -23,7 +23,7 @@ The whitepaper explains economic intent and expected mechanics. It is not the op
 5. maintained operator documentation;
 6. illustrative examples, forecasts, and dollar-denominated scenarios.
 
-Any disagreement among the first three sources is a compatibility failure. Stop rather than selecting the most convenient value.
+Any disagreement among the first three sources makes the affected fact unavailable for analysis. Surface the conflict rather than selecting the most convenient value or blocking unrelated, safely observed facts.
 
 Never turn an illustrative whitepaper value, schedule, address, or formula into a production constant without verifying it against the supported live deployment.
 
@@ -36,7 +36,7 @@ Page 17 names these Base mainnet addresses:
 - `$vCRYSTAL`: `0xC6881a2C4C50E28AdCaC4D5577cD8e211E806B76`
 - `$vDEUT`: `0x5A6027DE1C7E52B4b1AD0c13c3eC3Ad5FCb481e2`
 
-These are discovery inputs for optional Phase 0 capability entries, not trusted constants or core-startup requirements. Verify their runtime configuration, deployed code, interfaces, and relationships before each capability is enabled.
+These are discovery inputs, not trusted constants or core-startup requirements. Verify their runtime configuration, deployed code, interfaces, and relationships before using them as current-state facts.
 
 ## Durable Design Takeaways
 
@@ -44,19 +44,19 @@ These are discovery inputs for optional Phase 0 capability entries, not trusted 
 
 The core loop is production, allocation, construction, power projection, acquisition or loss, and reinvestment. Metal, crystal, and deuterium are productive inputs with distinct roles rather than interchangeable reward points. Costs grow faster than production at mature levels, and time, energy, queue availability, fuel, storage, and exposure constrain growth (pages 2–5, 10–12).
 
-For the operator, canonical `totalUserScore` remains the primary objective because the deployed contract defines the leaderboard. After the wallet achieves and while it maintains the top rank, verified market data and attributable outcomes can support a distinct secondary objective: maximizing the net financial return defined by an approved, versioned accounting specification under an approved risk budget. Realized results and risk-adjusted forecasts remain separate, whitepaper valuation scenarios remain illustrative, and the product must not describe production or strategy as guaranteed yield, profit, or realizable token value.
+For the application, canonical `totalUserScore` remains the primary advisory objective because the deployed contract defines the leaderboard. After the player achieves and while it maintains the top rank, verified market data may inform a secondary discussion of financial yield. Realized results and forecasts remain separate, whitepaper valuation scenarios remain illustrative, and the product must not describe production or strategy as guaranteed yield, profit, or realizable token value.
 
 ### Resource units and reserve backing
 
 The whitepaper specifies three external resource tokens with 6 decimals and a fixed genesis supply of 10 billion whole tokens each. One whole external token represents 1,000,000 internal game-resource units. The two denominations must never be conflated (pages 6–7).
 
-Its intended solvency invariant is external reserve balance greater than or equal to internal resource liabilities. Spendable resources, exit-locked resources, external reserve, and circulating float are distinct quantities. The operator should retain source denomination and conversion metadata, display reserve coverage without implying a peg, and fail closed on unsafe or unverifiable unit assumptions.
+Its intended solvency invariant is external reserve balance greater than or equal to internal resource liabilities. Spendable resources, exit-locked resources, external reserve, and circulating float are distinct quantities. The application should retain source denomination and conversion metadata, display reserve coverage without implying a peg, and mark conclusions unavailable when unit assumptions cannot be verified.
 
 ### Rift entry and exit are asymmetric
 
 Market deposits are intended to enter the game immediately because reserve and liability rise together. Exports enter a 28-day, planet-scoped lock. During that lock, resources are visible, unusable, immovable, and fully exposed to eligible raids. Locked resources have different protection and plunder rules from ordinary planet balances, and surviving locked units leave the reserve only at maturity (pages 12–14).
 
-This reinforces the existing decision to keep Rift extraction manual and disabled by default. A future recommendation must model the full exposure window, planet defense, hostile attention, cargo and loot ordering, opportunity cost, and the difference between requested and surviving withdrawal value. It must never present an export request as a passive withdrawal.
+A strategy answer about Rift must model the full exposure window, planet defense, hostile attention, cargo and loot ordering, opportunity cost, and the difference between requested and surviving withdrawal value. It must never present an export request as a passive withdrawal.
 
 ### Conflict is part of the economic model
 
@@ -68,59 +68,49 @@ Strategy explanations therefore need to account for risk-adjusted opportunity co
 
 The proposed market topology routes WETH through `$VEYDRIFT` to the three resource tokens. The whitepaper describes a future continuous clearing auction and Uniswap v4 liquidity sequence, while repeatedly stating that floor prices, dollar values, production values, and liquidity estimates are illustrative rather than pegs or promises (pages 7–11, 15–17).
 
-Token launch, auction, liquidity provision, swaps, withdrawals, and market strategy remain outside the current live operator strategy surface. If they enter scope later, they may inform or serve the secondary objective only through separately verified deployments, executable two-hop quotes, explicit user slippage, price-impact handling, attributable costs and outcomes, approval and custody boundaries, and independent review.
+Token launch, auction, liquidity provision, swaps, withdrawals, and market actions remain outside the MVP. Strategy discussion may use them only when separately verified deployments, executable quotes, liquidity, fees, slippage, price impact, and attributable costs are available. Otherwise the application must say that the financial question is not grounded by current evidence.
 
 ### Upgrade and observability risk are first-class
 
 The whitepaper calls for public monitoring of reserve coverage, liabilities, locked exits, circulating float, production, consumption, imports, exports, raid losses, liquidity, and concentration. It also recognizes that contract upgrades can change reserve, lock, or raid behavior (pages 14–16).
 
-This strengthens the Phase 0 deployment manifest and compatibility gate: every state interpretation must be tied to a verified chain, contract address, ABI hash, deployment identity, and source provenance. Phase 1 should retain enough raw metadata to explain later strategy decisions and detect drift.
+Every state interpretation should therefore retain its chain, contract or API source, observation time, indexed block or cursor where available, units, and relevant deployment provenance. A volatile backend rebuild alone should not block a read-only snapshot when the response schema and underlying game identity remain compatible.
 
-## Application To Delivery Phases
+## Application To The Read-Only MVP
 
-### Phase 0
+### Snapshot context
 
-- Record the whitepaper version and hash as research provenance, not deployment identity.
-- Pin and validate the required live game address, chain, ABI hash, deployment commit, backend build, and runtime/API surfaces. Treat Rift, resource-token, and market identities as optional capabilities whose absence does not block score-only operation.
-- Make internal resource units and external token quantities distinct types or validated boundaries.
-- Fixture-test representative denomination, reserve, and Rift-lock assumptions only after matching them to the deployed interfaces.
-- Treat any launch, auction, liquidity, or dollar-value parameter as unsupported until independently verified live.
+- Record this whitepaper version and hash as research provenance, not current game state.
+- Preserve spendable and locked resources separately, including planet scope and unlock timestamps where verified interfaces expose them.
+- Capture energy sufficiency, temperature, crawler limits, storage, queue timing, fuel, cargo, fleet slots, hostile mission data, and score inputs needed to explain constraints.
+- Preserve internal resource units and external token quantities as distinct denominations.
+- Treat any launch, auction, liquidity, price, or dollar-value parameter as unavailable until independently verified live.
 
-### Phase 1
+### Narrative and strategy context
 
-- Collect spendable and locked resources separately and preserve planet scope and unlock timestamps.
-- Capture energy sufficiency, temperature, crawler limits, storage, queue timing, fuel, cargo, fleet slots, and hostile mission data needed to explain constraints.
-- Add reserve coverage and deployment drift to read-only health where the live interfaces support them.
-- Persist raw source identifiers and unit metadata beside normalized state.
+- The universe narrative may explain production, allocation, conflict, and economic pressure, but it must anchor every current claim in the latest snapshot.
+- Strategy answers should consider canonical score delta, production benefit, completion time, queue opportunity cost, energy, storage, fuel, defensive flexibility, and relevant missing inputs.
+- The score-first, yield-second objective is an advisory lens rather than an optimizer. Financial discussion must expose assumptions and must not imply guaranteed value.
+- The model must distinguish verified mechanics from whitepaper intent and must say when current state cannot answer the question.
+- Player names, planet names, alliance text, and every other game-controlled string are untrusted data rather than prompt instructions.
 
-### Phase 2
+### Analysis QA
 
-- Rank economic actions using canonical score delta, production benefit, completion time, queue opportunity cost, energy, storage, fuel, and defensive flexibility.
-- Keep the primary score objective and secondary financial objective separate in evaluation, reporting, and policy; require every financial candidate to prove primary preservation over the approved horizon and stress assumptions.
-- Define the financial accounting metric and risk budget before activation. Keep realized outcomes separate from marked and risk-adjusted forecasts, label all assumptions and liquidity limits, and never describe projected production as guaranteed yield or profit.
-- Suspend the financial path when rank, quotes, liquidity, reserve coverage where relevant, conversion, accounting, or risk-model evidence is stale or incomplete while continuing safe score-only behavior.
+- Evaluate representative narratives and strategy answers against a real snapshot and the verified rules before accepting the dashboard analysis.
+- Preserve semantic criteria for factual accuracy, rule grounding, evidence, freshness, uncertainty, and usefulness rather than exact generated prose.
+- Include deliberate missing-data and hallucination-trap questions.
+- Adjust the deterministic snapshot digest, derived facts, context selection, and prompt before considering retrieval, tools, or agent infrastructure.
 
-### Phases 3 And 4
+## Verification Questions
 
-- Keep Rift extraction, attacks, token operations, liquidity actions, and market withdrawals outside routine autonomy unless a later approved design creates a narrow, verified envelope.
-- Re-read state, policy-check, and simulate the exact supported transaction immediately before submission.
-- Record requested, submitted, confirmed, and realized outcomes separately, especially when raids or market movement can change realized value.
-
-### Phase 5
-
-- Let defensive playbooks account for public Rift exposure, fleet travel and recall time, cargo, fuel, replacement cost, alliance support, and the possibility that no safe authorized response exists.
-- Include reserve, provider, deployment, and market-data degradation in health and pause behavior where those inputs affect decisions.
-
-## Phase 0 Verification Questions
-
-Before using a whitepaper claim in code, answer it from the supported deployment or deterministic deployed-interface fixture:
+Before using a whitepaper claim as analysis context, answer it from the supported deployment, a deterministic deployed-interface fixture, or label it explicitly as unverified design context:
 
 - Are the game and resource-token addresses still current on Base mainnet?
 - Are resource tokens live, and do decimals and internal-to-external conversion match the paper?
 - Which contract reads expose reserve, liability, spendable, and locked balances?
 - Does the deployed Rift use the stated duration, protection, loot ordering, and settlement behavior?
 - Which production, energy, queue, combat, cargo, and score formulas match deployed code?
-- Are token launch, CCA, Uniswap pools, and routing contracts deployed, merely planned, or explicitly unsupported?
+- Are token launch, CCA, Uniswap pools, and routing contracts deployed, merely planned, or unavailable to the snapshot?
 - Which runtime and backend surfaces expose the state without reconstructing it from prose?
 
-Unanswered questions are compatibility work, not assumptions.
+Unanswered questions are missing context, not assumptions the model may fill.
