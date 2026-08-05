@@ -1,4 +1,4 @@
-# Veydrift Analyst Contributor Guide
+# Veydrift Operator Contributor Guide
 
 ## Mission
 

@@ -2,6 +2,8 @@
 
 Veydrift Operator is a small, open-source companion for understanding Veydrift. The MVP will periodically capture the current public game state, explain the universe and one configured player's place in it, and answer nonpersistent strategy questions through an OpenAI-backed chat interface.
 
+**Veydrift Operator** is the canonical and long-term project name. This first build is deliberately read-only; future operator capabilities may be considered through explicit scope changes, but they are not part of this MVP.
+
 The product is read-only and advisory. Transaction construction, signing, approvals, automation, alerts, Telegram, persistent chat, and multi-user hosting are outside the MVP.
 
 The project is currently in Phase 1: resetting the earlier automation-oriented roadmap around this smaller product. Direction and phase gates live in the [implementation plan](IMPLEMENTATION_PLAN.md). The [deployment manifest](docs/deployment-manifest.md) preserves reviewed live-deployment research, and the [whitepaper research note](docs/research/veydrift-whitepaper.md) preserves labeled economic and game-design context.

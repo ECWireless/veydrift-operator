@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The supported deployment manifest is a reviewed research record for a specific Veydrift deployment. It preserves immutable identity and provenance gathered during the earlier deployment-discovery work; it does not discover the live deployment, make network requests, authorize actions, or establish that every volatile backend rebuild is incompatible with the read-only analyst.
+The supported deployment manifest is a reviewed research record for a specific Veydrift deployment. It preserves immutable identity and provenance gathered during the earlier deployment-discovery work; it does not discover the live deployment, make network requests, authorize actions, or establish that every volatile backend rebuild is incompatible with the read-only MVP.
 
 The typed schema and parser live in `apps/operator/src/deployment-manifest.ts`. The currently supported identity lives in `apps/operator/src/supported-deployment.ts`. Parsing rejects unknown fields, normalizes valid EVM addresses to checksum form, enforces cross-field invariants, and deeply freezes the result.
 

@@ -44,13 +44,13 @@ These are discovery inputs, not trusted constants or core-startup requirements. 
 
 The core loop is production, allocation, construction, power projection, acquisition or loss, and reinvestment. Metal, crystal, and deuterium are productive inputs with distinct roles rather than interchangeable reward points. Costs grow faster than production at mature levels, and time, energy, queue availability, fuel, storage, and exposure constrain growth (pages 2–5, 10–12).
 
-For the analyst, canonical `totalUserScore` remains the primary advisory objective because the deployed contract defines the leaderboard. After the player achieves and while it maintains the top rank, verified market data may inform a secondary discussion of financial yield. Realized results and forecasts remain separate, whitepaper valuation scenarios remain illustrative, and the product must not describe production or strategy as guaranteed yield, profit, or realizable token value.
+For the application, canonical `totalUserScore` remains the primary advisory objective because the deployed contract defines the leaderboard. After the player achieves and while it maintains the top rank, verified market data may inform a secondary discussion of financial yield. Realized results and forecasts remain separate, whitepaper valuation scenarios remain illustrative, and the product must not describe production or strategy as guaranteed yield, profit, or realizable token value.
 
 ### Resource units and reserve backing
 
 The whitepaper specifies three external resource tokens with 6 decimals and a fixed genesis supply of 10 billion whole tokens each. One whole external token represents 1,000,000 internal game-resource units. The two denominations must never be conflated (pages 6–7).
 
-Its intended solvency invariant is external reserve balance greater than or equal to internal resource liabilities. Spendable resources, exit-locked resources, external reserve, and circulating float are distinct quantities. The analyst should retain source denomination and conversion metadata, display reserve coverage without implying a peg, and mark conclusions unavailable when unit assumptions cannot be verified.
+Its intended solvency invariant is external reserve balance greater than or equal to internal resource liabilities. Spendable resources, exit-locked resources, external reserve, and circulating float are distinct quantities. The application should retain source denomination and conversion metadata, display reserve coverage without implying a peg, and mark conclusions unavailable when unit assumptions cannot be verified.
 
 ### Rift entry and exit are asymmetric
 
@@ -68,7 +68,7 @@ Strategy explanations therefore need to account for risk-adjusted opportunity co
 
 The proposed market topology routes WETH through `$VEYDRIFT` to the three resource tokens. The whitepaper describes a future continuous clearing auction and Uniswap v4 liquidity sequence, while repeatedly stating that floor prices, dollar values, production values, and liquidity estimates are illustrative rather than pegs or promises (pages 7–11, 15–17).
 
-Token launch, auction, liquidity provision, swaps, withdrawals, and market actions remain outside the MVP. Strategy discussion may use them only when separately verified deployments, executable quotes, liquidity, fees, slippage, price impact, and attributable costs are available. Otherwise the analyst must say that the financial question is not grounded by current evidence.
+Token launch, auction, liquidity provision, swaps, withdrawals, and market actions remain outside the MVP. Strategy discussion may use them only when separately verified deployments, executable quotes, liquidity, fees, slippage, price impact, and attributable costs are available. Otherwise the application must say that the financial question is not grounded by current evidence.
 
 ### Upgrade and observability risk are first-class
 
@@ -76,7 +76,7 @@ The whitepaper calls for public monitoring of reserve coverage, liabilities, loc
 
 Every state interpretation should therefore retain its chain, contract or API source, observation time, indexed block or cursor where available, units, and relevant deployment provenance. A volatile backend rebuild alone should not block a read-only snapshot when the response schema and underlying game identity remain compatible.
 
-## Application To The Read-Only Analyst
+## Application To The Read-Only MVP
 
 ### Snapshot context
 

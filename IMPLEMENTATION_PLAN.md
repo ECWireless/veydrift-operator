@@ -1,4 +1,4 @@
-# Veydrift Analyst MVP Implementation Plan
+# Veydrift Operator MVP Implementation Plan
 
 ## Purpose
 
