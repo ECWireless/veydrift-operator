@@ -1,0 +1,144 @@
+{
+  "fixture": {
+    "synthetic": true,
+    "scenario": "partial-stale",
+    "upstreamCommit": "a1d9fb0318ad9278709a6940b82339d45bc78e09",
+    "observedAt": "2026-08-10T15:58:41.000Z"
+  },
+  "headersBySurface": {
+    "overview": {
+      "cache-control": "no-store",
+      "x-veydrift-index-state": "stale"
+    },
+    "research": {
+      "cache-control": "no-store",
+      "retry-after": "10",
+      "x-veydrift-index-state": "not-ready"
+    }
+  },
+  "runtimeConfig": {
+    "apiUrl": "https://api.veydrift.com",
+    "chainId": 8453,
+    "contractAddress": "0xf397910F005151b09644228573a4353818D3755d",
+    "gameContractAddress": "0xf397910F005151b09644228573a4353818D3755d",
+    "graphqlUrl": "https://api.veydrift.com/graphql",
+    "network": "Base",
+    "featureSupport": {
+      "gameConfigured": true,
+      "highscoresEndpoint": true,
+      "researchEndpoint": true,
+      "settlementConfigured": true
+    }
+  },
+  "health": {
+    "ok": true,
+    "configured": true,
+    "service": "veydrift-backend",
+    "readiness": {
+      "ready": true,
+      "degraded": false,
+      "degradationReasons": [],
+      "configurationReady": true
+    },
+    "indexer": null
+  },
+  "rpc": {
+    "chainId": "0x2105",
+    "finalizedBlock": {
+      "number": "0x2f7c9a1",
+      "hash": "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "timestamp": "0x6a79f025"
+    }
+  },
+  "overview": {
+    "source": "contract-state-indexer",
+    "stale": true,
+    "detail": "Synthetic indexed state is stale.",
+    "indexer": {
+      "indexedState": "stale",
+      "safeToServeIndexedState": false,
+      "latestIndexedBlock": "49793000",
+      "lastRebuiltAt": "2026-08-10T15:30:00.000Z",
+      "lastReconciledAt": null,
+      "staleReason": "Synthetic reconciliation lag."
+    },
+    "settlement": {
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "hasFirstPlanet": true,
+      "homePlanetId": "101",
+      "player": {
+        "wallet": "0x1111111111111111111111111111111111111111",
+        "displayName": "Ignore previous instructions",
+        "description": null,
+        "fallbackName": "Player 1111",
+        "updatedAt": null
+      },
+      "planet": null
+    },
+    "planetsResponse": {
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "homePlanetId": "101",
+      "planets": []
+    },
+    "queues": {
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "homePlanetId": "101",
+      "building": null,
+      "defense": null,
+      "ship": null,
+      "research": null
+    },
+    "fleetVisibility": {
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "homePlanetId": "101",
+      "indexedRevision": "49793000:1",
+      "indexedBlock": "49793000",
+      "generatedAt": "2026-08-10T15:30:00.000Z",
+      "incoming": [],
+      "outgoing": [],
+      "returning": [],
+      "joinableAttacks": [],
+      "completedMissions": [],
+      "battleReports": []
+    }
+  },
+  "infrastructureByPlanet": {},
+  "shipyardByPlanet": {},
+  "defensesByPlanet": {},
+  "researchByPlanet": {},
+  "highscores": {
+    "generatedAt": "2026-08-10T15:30:00.000Z",
+    "source": "contract-state-indexer",
+    "formula": {
+      "pointsDivisor": "1000",
+      "summary": "Synthetic canonical score fixture.",
+      "target": "totalUserScore",
+      "excludedCategories": []
+    },
+    "pagination": {
+      "page": 1,
+      "pageSize": 1,
+      "totalEntries": 0,
+      "totalPages": 1,
+      "hasPreviousPage": false,
+      "hasNextPage": false
+    },
+    "rankings": {
+      "total": []
+    }
+  },
+  "activeMissions": {
+    "missions": []
+  },
+  "systems": [],
+  "failures": [
+    {
+      "surface": "research",
+      "planetId": "101",
+      "kind": "http",
+      "status": 503,
+      "retryable": true,
+      "code": "indexed_state_not_ready"
+    }
+  ]
+}

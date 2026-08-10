@@ -6,7 +6,7 @@ Veydrift Operator is a small, open-source companion for understanding Veydrift. 
 
 The product is read-only and advisory. Transaction construction, signing, approvals, automation, alerts, Telegram, persistent chat, and multi-user hosting are outside the MVP.
 
-The project is currently in Phase 2: building the read-only snapshot worker and measuring whether historical retention is useful. Direction, delivery units, and phase gates live in the [implementation plan](IMPLEMENTATION_PLAN.md). The [deployment manifest](docs/deployment-manifest.md) preserves reviewed live-deployment research, and the [whitepaper research note](docs/research/veydrift-whitepaper.md) preserves labeled economic and game-design context.
+The project is currently in Phase 2: building the read-only snapshot worker and measuring whether historical retention is useful. Direction, delivery units, and phase gates live in the [implementation plan](IMPLEMENTATION_PLAN.md). The [snapshot source contract](docs/research/veydrift-snapshot-sources.md) records the verified public read surfaces and freshness contract, the [deployment manifest](docs/deployment-manifest.md) preserves immutable deployment research, and the [whitepaper research note](docs/research/veydrift-whitepaper.md) preserves labeled economic and game-design context.
 
 ## Planned MVP
 
