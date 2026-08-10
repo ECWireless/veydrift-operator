@@ -103,7 +103,7 @@ const sourceMissionSchema = z.object(missionSchema.shape);
 
 const sourceFleetVisibilitySchema = z.object({
   wallet: evmAddressSchema,
-  homePlanetId: canonicalDecimalSchema,
+  homePlanetId: canonicalDecimalSchema.nullable(),
   indexedRevision: z.string().trim().min(1),
   indexedBlock: canonicalDecimalSchema,
   generatedAt: isoTimestampSchema,
@@ -307,6 +307,33 @@ const sourceBatchSchema = z.object({
     .optional()
     .default([]),
 });
+
+export type SnapshotPlanetDetailSurface =
+  | "defenses"
+  | "infrastructure"
+  | "research"
+  | "shipyard";
+
+export function isSnapshotSourceOverview(input: unknown): boolean {
+  return sourceBatchSchema.shape.overview.safeParse(input).success;
+}
+
+export function isSnapshotSourcePlanetDetail(
+  surface: SnapshotPlanetDetailSurface,
+  input: unknown,
+): boolean {
+  const schema = {
+    defenses: sourceDefensesSchema,
+    infrastructure: sourceInfrastructureSchema,
+    research: sourceResearchSchema,
+    shipyard: sourceShipyardSchema,
+  }[surface];
+  return schema.safeParse(input).success;
+}
+
+export function isSnapshotSourceUniverseSystem(input: unknown): boolean {
+  return sourceUniverseSystemSchema.safeParse(input).success;
+}
 
 export interface SnapshotObservation {
   readonly observedAt: string;

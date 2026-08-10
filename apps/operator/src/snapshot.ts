@@ -255,7 +255,7 @@ export const missionSchema = z.strictObject({
 
 export const fleetVisibilitySchema = z.strictObject({
   wallet: evmAddressSchema,
-  homePlanetId: canonicalDecimalSchema,
+  homePlanetId: canonicalDecimalSchema.nullable(),
   indexedRevision: z.string().trim().min(1),
   indexedBlock: canonicalDecimalSchema,
   generatedAt: isoTimestampSchema,

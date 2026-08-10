@@ -76,7 +76,7 @@ An API indexed block may be newer than the current finalized RPC cursor. That is
 
 ## Collection Guidance For Later Units
 
-Unit 4 should inject its HTTP and RPC transports, validate runtime identity before player collection, request one overview, fan out the four verified detail reads for every managed planet, then collect highscores, active missions, and only the relevant universe systems. Unit 5 will decide the final interval and retry policy.
+Unit 4 injects its HTTP and RPC transports and validates runtime identity before player collection. After one overview, collection is player-first: resolve the canonical home planet, complete its four verified detail reads and universe-system read, then fan out to remaining managed planets, highscores, active missions, and the other unique managed systems. A wallet with no settlement skips planet and system reads; an inconsistent or failed primary bundle does not open the secondary fan-out barrier. Unit 5 will decide partial-failure recovery, the final interval, and retry policy.
 
 Current upstream code limits rate-controlled read paths to 40 requests per normalized route in a 10-second window and returns `429` with `retry-after`. This is an upper safety boundary, not a target rate. The worker must avoid overlap, honor `retry-after`, and use the smallest request set needed for a snapshot.
 
