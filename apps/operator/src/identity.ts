@@ -1,45 +1,40 @@
-import type { Address, Hex } from "viem";
-import { privateKeyToAddress } from "viem/accounts";
+import { getAddress, isAddress, type Address, zeroAddress } from "viem";
 import { z } from "zod";
 
-export const OPERATOR_PRIVATE_KEY_ENV_VAR =
-  "VEYDRIFT_OPERATOR_PRIVATE_KEY" as const;
+export const PLAYER_ADDRESS_ENV_VAR = "VEYDRIFT_PLAYER_ADDRESS" as const;
 
-const privateKeySchema = z
+const playerAddressSchema = z
   .string()
-  .regex(/^0x[0-9a-fA-F]{64}$/, "invalid private key format");
+  .refine((value) => isAddress(value), "invalid player address")
+  .transform((value) => getAddress(value))
+  .refine((value) => value !== zeroAddress, "invalid player address");
 
-export interface OperatorIdentity {
-  readonly walletAddress: Address;
+export interface PlayerIdentity {
+  readonly playerAddress: Address;
 }
 
-export class OperatorIdentityConfigurationError extends Error {
-  readonly code = "INVALID_OPERATOR_PRIVATE_KEY" as const;
-  readonly field = OPERATOR_PRIVATE_KEY_ENV_VAR;
+export class PlayerIdentityConfigurationError extends Error {
+  readonly code = "INVALID_PLAYER_ADDRESS" as const;
+  readonly field = PLAYER_ADDRESS_ENV_VAR;
 
   constructor() {
     super(
-      `${OPERATOR_PRIVATE_KEY_ENV_VAR} must be a valid 0x-prefixed, 32-byte secp256k1 private key`,
+      `${PLAYER_ADDRESS_ENV_VAR} must be a valid, nonzero 0x-prefixed EVM address`,
     );
-    this.name = "OperatorIdentityConfigurationError";
+    this.name = "PlayerIdentityConfigurationError";
   }
 }
 
-export function deriveOperatorIdentity(
+export function readPlayerIdentity(
   environment: Readonly<Record<string, string | undefined>>,
-): Readonly<OperatorIdentity> {
-  const result = privateKeySchema.safeParse(
-    environment[OPERATOR_PRIVATE_KEY_ENV_VAR],
+): Readonly<PlayerIdentity> {
+  const result = playerAddressSchema.safeParse(
+    environment[PLAYER_ADDRESS_ENV_VAR],
   );
 
   if (!result.success) {
-    throw new OperatorIdentityConfigurationError();
+    throw new PlayerIdentityConfigurationError();
   }
 
-  try {
-    const walletAddress = privateKeyToAddress(result.data as Hex);
-    return Object.freeze({ walletAddress });
-  } catch {
-    throw new OperatorIdentityConfigurationError();
-  }
+  return Object.freeze({ playerAddress: result.data });
 }

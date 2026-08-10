@@ -1,7 +1,7 @@
-import type { OperatorIdentity } from "./identity.ts";
 import {
-  deriveOperatorIdentity,
-  OperatorIdentityConfigurationError,
+  type PlayerIdentity,
+  PlayerIdentityConfigurationError,
+  readPlayerIdentity,
 } from "./identity.ts";
 
 export const OPERATOR_NAME = "Veydrift Operator";
@@ -11,8 +11,8 @@ export interface OperatorLogger {
   info(message: string): void;
 }
 
-export function createStartupMessage(identity: OperatorIdentity): string {
-  return `${OPERATOR_NAME} is ready for ${identity.walletAddress}`;
+export function createStartupMessage(identity: PlayerIdentity): string {
+  return `${OPERATOR_NAME} is ready for ${identity.playerAddress}`;
 }
 
 export function runOperator(
@@ -20,12 +20,12 @@ export function runOperator(
   logger: OperatorLogger,
 ): 0 | 1 {
   try {
-    const identity = deriveOperatorIdentity(environment);
+    const identity = readPlayerIdentity(environment);
     logger.info(createStartupMessage(identity));
     return 0;
   } catch (error) {
     const message =
-      error instanceof OperatorIdentityConfigurationError
+      error instanceof PlayerIdentityConfigurationError
         ? error.message
         : `${OPERATOR_NAME} failed to start`;
 

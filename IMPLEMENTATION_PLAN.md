@@ -90,7 +90,7 @@ One Bun process should own the worker, current snapshot, analysis boundary, and 
 
 ## Delivery Phases
 
-### Phase 1: Scope Reset — implemented and reviewed 2026-08-05; awaiting merge
+### Phase 1: Scope Reset — implemented, reviewed, and merged 2026-08-05
 
 Deliver this documentation-only reset as one pull request:
 
@@ -108,7 +108,7 @@ Exit gate:
 - the complete repository check passes; and
 - one fresh-context reviewer finds no unresolved scope or authority conflict.
 
-### Phase 2: Snapshot Worker And History Decision — planned
+### Phase 2: Snapshot Worker And History Decision — in progress
 
 Build the read-only truth layer:
 
@@ -119,6 +119,23 @@ Build the read-only truth layer:
 - Retain source identity, observation time, indexed block or equivalent cursor, units, and missing-field state.
 - Produce both the raw normalized snapshot and a compact model-ready digest.
 - Expose current snapshot, collection status, last success, and last error through a small read API.
+
+Deliver Phase 2 through these approved commit-sized units, grouped into three sequential pull requests:
+
+1. replace the active private-key startup requirement with validated public player configuration and activate Phase 2 documentation;
+2. discover and document the verified public source contract, then create synthetic source fixtures;
+3. define the immutable normalized snapshot contract and fixture-tested normalizers;
+4. implement one-shot read-only collection through injected public API and RPC adapters;
+5. add immediate and interval refresh, non-overlap, status, stale-state, partial-failure, and recovery behavior;
+6. produce the compact model-ready digest and deterministic observations;
+7. expose the current snapshot, digest, and collection status through the local read API;
+8. run the approved live acceptance smoke and add disposable history measurement tooling;
+9. record the measured history usefulness and storage decision after the bounded observation window; and
+10. implement the smallest selected retention policy only when unit 9 demonstrates enough value, as a separately debriefed conditional unit.
+
+Pull request 1 contains units 1–4 (snapshot foundation), pull request 2 contains units 5–7 (worker and read API), and pull request 3 contains units 8–10 (live validation and the history decision). If unit 10 proves too substantial for pull request 3, stop and debrief that exception rather than silently expanding the review boundary.
+
+Unit 1 does not modify the ignored local `.env`. The read-only runtime uses `VEYDRIFT_PLAYER_ADDRESS` and does not load `VEYDRIFT_OPERATOR_PRIVATE_KEY`; future write functionality remains a separate scope and security decision.
 
 #### Historical Snapshot Decision Gate
 

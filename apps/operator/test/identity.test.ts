@@ -1,74 +1,84 @@
 import { describe, expect, test } from "bun:test";
 
 import {
-  deriveOperatorIdentity,
-  OPERATOR_PRIVATE_KEY_ENV_VAR,
-  OperatorIdentityConfigurationError,
+  PLAYER_ADDRESS_ENV_VAR,
+  PlayerIdentityConfigurationError,
+  readPlayerIdentity,
 } from "../src/identity.ts";
 
-const SYNTHETIC_PRIVATE_KEY = `0x${"1".padStart(64, "0")}`;
 const SYNTHETIC_WALLET_ADDRESS = "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf";
-const SECP256K1_ORDER_PREFIX = `${"f".repeat(31)}ebaaedce6af48a03bbfd25e8cd036`;
-const GREATEST_VALID_PRIVATE_KEY = `0x${SECP256K1_ORDER_PREFIX}4140`;
-const GREATEST_VALID_WALLET_ADDRESS =
-  "0x80C0dbf239224071c59dD8970ab9d542E3414aB2";
-const SECP256K1_ORDER = `0x${SECP256K1_ORDER_PREFIX}4141`;
+const LOWERCASE_WALLET_ADDRESS = SYNTHETIC_WALLET_ADDRESS.toLowerCase();
 
 function expectConfigurationError(
   environment: Readonly<Record<string, string | undefined>>,
-): OperatorIdentityConfigurationError {
+): PlayerIdentityConfigurationError {
   try {
-    deriveOperatorIdentity(environment);
+    readPlayerIdentity(environment);
   } catch (error) {
-    expect(error).toBeInstanceOf(OperatorIdentityConfigurationError);
-    return error as OperatorIdentityConfigurationError;
+    expect(error).toBeInstanceOf(PlayerIdentityConfigurationError);
+    return error as PlayerIdentityConfigurationError;
   }
 
-  throw new Error("Expected operator identity derivation to fail");
+  throw new Error("Expected player identity configuration to fail");
 }
 
-describe("operator identity", () => {
-  test("derives a frozen public identity from a synthetic private key", () => {
-    const identity = deriveOperatorIdentity({
-      [OPERATOR_PRIVATE_KEY_ENV_VAR]: SYNTHETIC_PRIVATE_KEY,
+describe("player identity", () => {
+  test("reads a frozen public identity from a checksummed player address", () => {
+    const identity = readPlayerIdentity({
+      [PLAYER_ADDRESS_ENV_VAR]: SYNTHETIC_WALLET_ADDRESS,
     });
 
-    expect(identity).toEqual({ walletAddress: SYNTHETIC_WALLET_ADDRESS });
+    expect(identity).toEqual({ playerAddress: SYNTHETIC_WALLET_ADDRESS });
     expect(Object.isFrozen(identity)).toBe(true);
-    expect(Object.keys(identity)).toEqual(["walletAddress"]);
-    expect(JSON.stringify(identity)).not.toContain(SYNTHETIC_PRIVATE_KEY);
+    expect(Object.keys(identity)).toEqual(["playerAddress"]);
   });
 
-  test("rejects a missing private key without exposing input", () => {
+  test("normalizes a lowercase player address to its checksum", () => {
+    const identity = readPlayerIdentity({
+      [PLAYER_ADDRESS_ENV_VAR]: LOWERCASE_WALLET_ADDRESS,
+    });
+
+    expect(identity).toEqual({ playerAddress: SYNTHETIC_WALLET_ADDRESS });
+  });
+
+  test("does not read the legacy private-key setting", () => {
+    const environment = new Proxy(
+      { [PLAYER_ADDRESS_ENV_VAR]: SYNTHETIC_WALLET_ADDRESS },
+      {
+        get: (target, property, receiver) => {
+          if (property === "VEYDRIFT_OPERATOR_PRIVATE_KEY") {
+            throw new Error("legacy private key was read");
+          }
+
+          return Reflect.get(target, property, receiver);
+        },
+      },
+    );
+
+    expect(readPlayerIdentity(environment)).toEqual({
+      playerAddress: SYNTHETIC_WALLET_ADDRESS,
+    });
+  });
+
+  test("rejects a missing player address", () => {
     const error = expectConfigurationError({});
 
-    expect(error.code).toBe("INVALID_OPERATOR_PRIVATE_KEY");
-    expect(error.field).toBe(OPERATOR_PRIVATE_KEY_ENV_VAR);
-    expect(error.message).toContain(OPERATOR_PRIVATE_KEY_ENV_VAR);
+    expect(error.code).toBe("INVALID_PLAYER_ADDRESS");
+    expect(error.field).toBe(PLAYER_ADDRESS_ENV_VAR);
+    expect(error.message).toContain(PLAYER_ADDRESS_ENV_VAR);
     expect(error).not.toHaveProperty("cause");
-  });
-
-  test("accepts the greatest valid secp256k1 scalar", () => {
-    const identity = deriveOperatorIdentity({
-      [OPERATOR_PRIVATE_KEY_ENV_VAR]: GREATEST_VALID_PRIVATE_KEY,
-    });
-
-    expect(identity).toEqual({
-      walletAddress: GREATEST_VALID_WALLET_ADDRESS,
-    });
   });
 
   test.each([
     "",
-    "1".repeat(64),
     "0x1",
-    `0x${"g".repeat(64)}`,
-    `0x${"0".repeat(64)}`,
-    SECP256K1_ORDER,
-    `0x${"f".repeat(64)}`,
-  ])("rejects an invalid key without echoing it", (candidate) => {
+    `0x${"g".repeat(40)}`,
+    `0x${"0".repeat(40)}`,
+    "0x7E5F4552091A69125d5DfCb7b8C2659029395BDF",
+    `${LOWERCASE_WALLET_ADDRESS}00`,
+  ])("rejects an invalid player address without echoing it", (candidate) => {
     const error = expectConfigurationError({
-      [OPERATOR_PRIVATE_KEY_ENV_VAR]: candidate,
+      [PLAYER_ADDRESS_ENV_VAR]: candidate,
     });
 
     if (candidate.length > 0) {
