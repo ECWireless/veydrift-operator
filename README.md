@@ -57,6 +57,8 @@ The player address is normalized to its EIP-55 checksum before use. A missing, z
 
 Snapshot refresh defaults to 60 seconds. Set `VEYDRIFT_SNAPSHOT_INTERVAL_SECONDS` to an integer from 30 through 86400 to override it. The worker refreshes immediately when started, never overlaps collections, and retains the last successful snapshot when a later refresh fails. Phase 2 Unit 7 will assemble this worker into the long-running local read API process; the current scaffold entry point does not make live snapshot calls yet.
 
+Each normalized snapshot can also produce a versioned, deeply immutable analysis digest. It starts with the home planet, retains every owned colony, compacts the collected universe view, carries freshness and unavailable-input evidence, and labels its aggregate resources, production, queues, missions, combat power, and score gap as deterministic calculations. The digest includes the advisory objective profile and marks all game-originated text as untrusted data; it does not contain model output.
+
 The Phase 2 snapshot runtime does not read `VEYDRIFT_OPERATOR_PRIVATE_KEY`. Any copy already present in the ignored local `.env` remains local and untouched; signing functionality requires an explicit future scope change and security design.
 
 Future OpenAI access will use a server-side `OPENAI_API_KEY` from the ignored `.env`. It must never be exposed to browser code, API responses, logs, tests, screenshots, or tracked examples. OpenAI calls are not part of Phase 2.

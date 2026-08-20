@@ -137,6 +137,8 @@ Pull request 1 contains units 1–4 (snapshot foundation), pull request 2 contai
 
 The Unit 5 worker refreshes immediately when started and defaults to a configurable 60-second interval, bounded from 30 seconds through 24 hours. Collections never overlap. Retryable failures use a 30-second exponential delay capped by the normal interval while honoring any longer `Retry-After`; nonretryable failures wait for the normal interval. A failed refresh preserves the last successful immutable snapshot and reports the failed attempt separately until recovery.
 
+The Unit 6 digest is a versioned, deeply immutable projection containing observed snapshot facts and labeled deterministic calculations only. It orders the home planet first, retains every owned colony, preserves collected leaderboard and system context, carries provenance and missing-input state, and includes the approved score-first objective profile plus an explicit untrusted-game-text boundary. Aggregate coverage counts prevent partial production data from appearing complete.
+
 Unit 1 does not modify the ignored local `.env`. The read-only runtime uses `VEYDRIFT_PLAYER_ADDRESS` and does not load `VEYDRIFT_OPERATOR_PRIVATE_KEY`; future write functionality remains a separate scope and security decision.
 
 #### Historical Snapshot Decision Gate
