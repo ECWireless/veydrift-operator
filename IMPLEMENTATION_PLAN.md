@@ -135,6 +135,8 @@ Deliver Phase 2 through these approved commit-sized units, grouped into three se
 
 Pull request 1 contains units 1–4 (snapshot foundation), pull request 2 contains units 5–7 (worker and read API), and pull request 3 contains units 8–10 (live validation and the history decision). If unit 10 proves too substantial for pull request 3, stop and debrief that exception rather than silently expanding the review boundary.
 
+The Unit 5 worker refreshes immediately when started and defaults to a configurable 60-second interval, bounded from 30 seconds through 24 hours. Collections never overlap. Retryable failures use a 30-second exponential delay capped by the normal interval while honoring any longer `Retry-After`; nonretryable failures wait for the normal interval. A failed refresh preserves the last successful immutable snapshot and reports the failed attempt separately until recovery.
+
 Unit 1 does not modify the ignored local `.env`. The read-only runtime uses `VEYDRIFT_PLAYER_ADDRESS` and does not load `VEYDRIFT_OPERATOR_PRIVATE_KEY`; future write functionality remains a separate scope and security decision.
 
 #### Historical Snapshot Decision Gate
@@ -229,7 +231,6 @@ For each phase:
 
 ## Current Open Decisions
 
-- Phase 2 refresh interval and retry behavior.
 - Whether historical snapshots create enough narrative or strategic value to justify storage, and the smallest useful retention policy if they do.
 - The exact verified public Veydrift surfaces needed for a complete player and universe snapshot.
 - The representative Phase 3 analysis question suite and bounded OpenAI evaluation budget.
