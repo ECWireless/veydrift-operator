@@ -47,7 +47,7 @@ bun --no-env-file run build
 
 ## Current startup configuration
 
-Copy the synthetic public player-address setting from `.env.example` into the ignored `.env`, replace it with the player to observe, and start the current scaffold:
+Copy the synthetic public player-address setting from `.env.example` into the ignored `.env`, replace it with the player to observe, and start the operator:
 
 ```sh
 bun run start
@@ -55,7 +55,9 @@ bun run start
 
 The player address is normalized to its EIP-55 checksum before use. A missing, zero, malformed, or incorrectly checksummed mixed-case address prevents startup with a sanitized error.
 
-Snapshot refresh defaults to 60 seconds. Set `VEYDRIFT_SNAPSHOT_INTERVAL_SECONDS` to an integer from 30 through 86400 to override it. The worker refreshes immediately when started, never overlaps collections, and retains the last successful snapshot when a later refresh fails. Phase 2 Unit 7 will assemble this worker into the long-running local read API process; the current scaffold entry point does not make live snapshot calls yet.
+Snapshot refresh defaults to 60 seconds. Set `VEYDRIFT_SNAPSHOT_INTERVAL_SECONDS` to an integer from 30 through 86400 to override it. The worker refreshes immediately when started, never overlaps collections, and retains the last successful snapshot when a later refresh fails.
+
+The operator binds only to `127.0.0.1` and defaults to port `3000`; set `VEYDRIFT_OPERATOR_PORT` to an integer from 1 through 65535 to choose another local port. Starting the operator immediately begins read-only collection from the verified public Veydrift API and Base RPC. `GET /api/snapshot` returns API version 1, collection status, the latest normalized snapshot, and its matching analysis digest with `Cache-Control: no-store`. Before the first successful refresh, both snapshot fields are `null` and the status explains the pending or failed collection. The API has no refresh, transaction, signing, or other mutation endpoint.
 
 Each normalized snapshot can also produce a versioned, deeply immutable analysis digest. It starts with the home planet, retains every owned colony, compacts the collected universe view, carries freshness and unavailable-input evidence, and labels its aggregate resources, production, queues, missions, combat power, and score gap as deterministic calculations. The digest includes the advisory objective profile and marks all game-originated text as untrusted data; it does not contain model output.
 

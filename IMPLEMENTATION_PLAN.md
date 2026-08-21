@@ -139,6 +139,8 @@ The Unit 5 worker refreshes immediately when started and defaults to a configura
 
 The Unit 6 digest is a versioned, deeply immutable projection containing observed snapshot facts and labeled deterministic calculations only. It orders the home planet first, retains every owned colony, preserves collected leaderboard and system context, carries provenance and missing-input state, and includes the approved score-first objective profile plus an explicit untrusted-game-text boundary. Aggregate coverage counts prevent partial production data from appearing complete.
 
+The Unit 7 process assembles the public adapters, collector, interval worker, digest, and a dependency-free local read API. It binds only to `127.0.0.1`, defaults to port 3000 with a validated override, and exposes `GET /api/snapshot` with the API version, worker status, latest normalized snapshot, and matching cached digest. Responses are non-cacheable, pre-snapshot state remains inspectable, failures are sanitized, and no refresh or mutation route is exposed.
+
 Unit 1 does not modify the ignored local `.env`. The read-only runtime uses `VEYDRIFT_PLAYER_ADDRESS` and does not load `VEYDRIFT_OPERATOR_PRIVATE_KEY`; future write functionality remains a separate scope and security decision.
 
 #### Historical Snapshot Decision Gate
