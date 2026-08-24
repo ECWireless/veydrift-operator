@@ -106,6 +106,57 @@ describe("operator runtime lifecycle", () => {
     expect(runtime.url).toBeNull();
   });
 
+  test("consumes an asynchronous worker startup failure and stops", async () => {
+    const worker = new FakeWorker();
+    worker.startRejection = new Error("synthetic-async-start-failure");
+    let serverStopped = false;
+    let closeActiveConnections: boolean | undefined;
+    const runtime = new OperatorRuntime({
+      port: 3000,
+      worker,
+      serverFactory: () => ({
+        port: 3000,
+        stop: (closeActive) => {
+          serverStopped = true;
+          closeActiveConnections = closeActive;
+        },
+      }),
+    });
+
+    runtime.start();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(serverStopped).toBe(true);
+    expect(closeActiveConnections).toBe(true);
+    expect(worker.stopCalls).toBe(1);
+    expect(runtime.url).toBeNull();
+  });
+
+  test("closes the server when failed-start worker cleanup throws", async () => {
+    const worker = new FakeWorker();
+    worker.startRejection = new Error("synthetic-async-start-failure");
+    worker.stopError = new Error("synthetic-worker-stop-failure");
+    let serverStopped = false;
+    const runtime = new OperatorRuntime({
+      port: 3000,
+      worker,
+      serverFactory: () => ({
+        port: 3000,
+        stop: () => {
+          serverStopped = true;
+        },
+      }),
+    });
+
+    runtime.start();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(serverStopped).toBe(true);
+    expect(runtime.url).toBeNull();
+  });
+
   test("serves the read API through an actual loopback listener", async () => {
     const worker = new FakeWorker();
     const runtime = new OperatorRuntime({ port: 0, worker });
@@ -133,15 +184,20 @@ class FakeWorker implements OperatorWorker {
   startCalls = 0;
   stopCalls = 0;
   startError: Error | null = null;
+  startRejection: Error | null = null;
+  stopError: Error | null = null;
 
   start(): Promise<void> {
     this.startCalls += 1;
     if (this.startError !== null) throw this.startError;
+    if (this.startRejection !== null)
+      return Promise.reject(this.startRejection);
     return Promise.resolve();
   }
 
   stop(): void {
     this.stopCalls += 1;
+    if (this.stopError !== null) throw this.stopError;
   }
 
   view() {

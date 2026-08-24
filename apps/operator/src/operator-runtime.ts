@@ -89,7 +89,9 @@ export class OperatorRuntime {
     });
     this.#server = server;
     try {
-      void this.#worker.start();
+      void this.#worker.start().catch(() => {
+        void this.#stopAfterWorkerStartupFailure(server).catch(() => undefined);
+      });
     } catch (error) {
       this.#server = null;
       void Promise.resolve(server.stop(true)).catch(() => undefined);
@@ -102,6 +104,17 @@ export class OperatorRuntime {
     const server = this.#server;
     this.#server = null;
     if (server !== null) await server.stop();
+  }
+
+  async #stopAfterWorkerStartupFailure(server: OperatorServer): Promise<void> {
+    if (this.#server !== server) return;
+
+    this.#server = null;
+    try {
+      this.#worker.stop();
+    } finally {
+      await server.stop(true);
+    }
   }
 }
 
